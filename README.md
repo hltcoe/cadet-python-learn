@@ -31,9 +31,9 @@ class ExampleLearner(cpl.Learner):
     def __init__(self, session_id, annotation_units, language, fetch_client):
         # you can add additional arguments needed for your model
         super(ExampleLearner, self).__init__(session_id, annotation_units, language, fetch_client)
+        # see learner.py for the names of parameters for language or annotation units
         # you can load model information or other initialization here
         self.annotations = []
-        self.units = annotation_units
         self.communications = self.load_comms()
 
     def add_annotations(self, annotations):
