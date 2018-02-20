@@ -1,20 +1,27 @@
 import argparse
-import logging
 import cadet_python_learn as cpl
+from concrete.util.learn_wrapper import ActiveLearnerServerServiceWrapper
+import logging
+import random
 
 
 class RandomLearner(cpl.Learner):
+    """
+    Perform a random shuffle on the annotation units
+    """
     def __init__(self, session_id, annotation_units, language, fetch_client):
         super(RandomLearner, self).__init__(session_id, annotation_units, language, fetch_client)
 
     def add_annotations(self, annotations):
-        pass
+        logging.info("RandomLearner.add_annotation() has been called")
 
     def train(self):
-        pass
+        logging.info("RandomLearner.train() has been called")
 
     def rank(self):
-        print(self.session_id)
+        logging.info("RandomLearner.rank() has been called")
+        random.shuffle(self.annotation_units)
+        return self.annotation_units
 
 
 def main():
@@ -36,8 +43,9 @@ def main():
 
     logging.info('Serving on %d...' % args.port)
 
-    learner = RandomLearner.factory("xyz", [], "en", None)
-    learner.rank()
+    handler = cpl.LearnerHandler(args.fetch_host, args.fetch_port, args.retrain_interval, RandomLearner.factory)
+    server = ActiveLearnerServerServiceWrapper(handler)
+    server.serve(None, args.port)
 
 
 if __name__ == '__main__':

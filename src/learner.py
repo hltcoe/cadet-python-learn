@@ -4,6 +4,20 @@ import abc
 class Learner(object):
     """
     Interface for the CADET Active Learner
+
+    The Learner sorts annotation units. An annotation unit could be a full communication
+    or a single sentence. It receives annotations as they are available from the user.
+    Asynchronously, it builds a model and sorts the annotation units according to that
+    model.
+
+    Currently, CADET requires that all annotation units are returned by rank().
+    This requirement will be relaxed in the next version.
+
+    In order to rank the annotation units, the Learner must request the underlying
+    communications from the fetch server.
+
+    rank() is called once on start up of a session in case the Learner begins with
+    a default model. Return None if you don't want to change the initial sort order.
     """
     __metaclass__ = abc.ABCMeta
 
